@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 require('dotenv').config();
+const routes = require('./src/routes')
 
 require('./db').connect();
 
@@ -18,7 +19,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
 
-//app.use('/', routes)
+app.use('/', routes)
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server Started at ${PORT}`)
