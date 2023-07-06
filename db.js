@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {seedDatabase} = require("./src/seeders/seed.database");
 
 const URLSTR = process.env.MONGO_URI;
 exports.connect = () => {
@@ -9,5 +10,6 @@ exports.connect = () => {
     });
     database.once('connected', () => {
         console.log('Database Connected');
+        seedDatabase()
     });
 }

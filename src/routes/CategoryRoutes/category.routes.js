@@ -3,23 +3,23 @@ const router = express.Router()
 
 const {CategoryController} = require("../../controllers")
 const {
-    QueryToObject,
-    ErrorHandler, ParamsToObject
-} = require("../../middleware/validate.middleware");
+    ResponseHandler, ValidationHandler
+} = require("../../middleware/helpers.middleware");
+const {CategoryValidationSchema} = require("../../validators/category.validator");
 
-router.get('/', QueryToObject, CategoryController.getCategories, ErrorHandler)
+router.get('/', ResponseHandler(CategoryController.getCategories))
 
-router.post('/', CategoryController.addCategory, ErrorHandler)
+router.post('/', ValidationHandler(CategoryValidationSchema.postValidation), ResponseHandler(CategoryController.addCategory))
 
-router.put("/:id", CategoryController.updateCategory, ErrorHandler)
+router.put("/:id", ValidationHandler(CategoryValidationSchema.postValidation), ResponseHandler(CategoryController.updateCategory))
 
-router.delete("/", CategoryController.deleteAllCategories, ErrorHandler)
+router.delete("/", ResponseHandler(CategoryController.deleteAllCategories))
 
-router.delete("/:id", CategoryController.deleteCategory, ErrorHandler)
+router.delete("/:id", ResponseHandler(CategoryController.deleteCategory))
 
-router.get("/count", QueryToObject, CategoryController.getCategoriesCount, ErrorHandler)
+router.get("/count", ResponseHandler(CategoryController.getCategoriesCount))
 
-router.get('/:id',ParamsToObject, CategoryController.getCategories, ErrorHandler)
+router.get('/:id', ResponseHandler(CategoryController.getCategories))
 
 
 module.exports = router

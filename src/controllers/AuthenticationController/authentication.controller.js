@@ -10,40 +10,30 @@ const {AuthenticationService} = require("../../services/authentication.service")
 
 
 exports.signUp = async (req, res, next) => {
-    try {
-        const user = await AuthenticationService.signUp(req.body)
-        res.locals.token = generateToken({
-            _id: user._id,
-            email: user.email,
-            role: user.role
-        })
-        res.locals.user = user
-        next()
-    } catch (err) {
-        res.locals.errObj = err
-        next()
-    }
+    const user = await AuthenticationService.signUp(req.body)
+    res.locals.token = generateToken({
+        _id: user._id,
+        email: user.email,
+        role: user.role
+    })
+    res.locals.user = user
+    return next()
 }
 
 exports.signIn = async (req, res, next) => {
-    try {
-        const user = await AuthenticationService.signIn(req.body)
-        res.locals.token = generateToken({
-            _id: user._id,
-            email: user.email,
-            role: user.role,
-            is_email_verified: user.is_email_verified
-        })
-        res.locals.user = user
-        next()
-    } catch (err) {
-        res.locals.errObj = err
-        next()
-    }
+    const user = await AuthenticationService.signIn(req.body)
+    res.locals.token = generateToken({
+        _id: user._id,
+        email: user.email,
+        role: user.role,
+        is_email_verified: user.is_email_verified
+    })
+    res.locals.user = user
+    return next()
 }
 
-exports.sendEmailLink = async (req, res,next) => {
-    if (res.locals.user.is_email_verified) {
+exports.sendEmailLink = (req, res) => {
+    if (res.locals.user?.is_email_verified) {
         return res.status(RESPONSE_SUCCESS.SUCCESS.code).json({
             success: true,
             data: {
@@ -82,12 +72,14 @@ exports.sendEmailLink = async (req, res,next) => {
             }
         })
     }).catch(err => {
-        res.locals.errObj = err
-        next()
+        return res.status(RESPONSE_FAILURE.FAILED_DELIVERY.code).json({
+            success: false,
+            error: err.message
+        })
     })
 }
 
-exports.authorizeJWTToken = async (req, res) => {
+exports.authorizeJWTToken = (req, res) => {
     if (req.user.role === req.authInfo.role) {
         return res.status(RESPONSE_SUCCESS.SUCCESS.code).json({
             success: true,

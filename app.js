@@ -21,7 +21,7 @@ app.use(cors());
 
 app.use('/', routes)
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, 'localhost', () => {
     console.log(`Server Started at ${PORT}`)
 });
 

@@ -3,24 +3,25 @@ const router = express.Router()
 
 const {ServiceController} = require("../../controllers")
 const {
-    QueryToObject, ErrorHandler
-} = require("../../middleware/validate.middleware");
+    ResponseHandler, ValidationHandler
+} = require("../../middleware/helpers.middleware");
+const {ServiceValidationSchema} = require("../../validators/service.validator");
 
 
-router.get('/', QueryToObject, ServiceController.getServices, ErrorHandler)
+router.get('/', ResponseHandler(ServiceController.getServices))
 
-router.post('/', ServiceController.addService, ErrorHandler)
+router.post('/', ValidationHandler(ServiceValidationSchema.postValidation), ResponseHandler(ServiceController.addService))
 
-router.put("/:id", ServiceController.updateService, ErrorHandler)
+router.put("/:id", ValidationHandler(ServiceValidationSchema.putValidation), ResponseHandler(ServiceController.updateService))
 
-router.delete("/:id", ServiceController.deleteService, ErrorHandler)
+router.delete("/:id", ResponseHandler(ServiceController.deleteService))
 
-router.delete("/", ServiceController.deleteAllServices, ErrorHandler)
+router.delete("/", ResponseHandler(ServiceController.deleteAllServices))
 
-router.get("/count", QueryToObject, ServiceController.getServicesCount, ErrorHandler)
+router.get("/count", ResponseHandler(ServiceController.getServicesCount))
 
-router.get("/:id/jobs", ServiceController.getServiceJobs, ErrorHandler)
+router.get("/:id/jobs", ResponseHandler(ServiceController.getServiceJobs))
 
-router.get("/:id", ServiceController.getServices, ErrorHandler)
+router.get("/:id", ResponseHandler(ServiceController.getServices))
 
 module.exports = router

@@ -4,22 +4,25 @@ const router = express.Router()
 const {
     UserController, AuthenticationController,
 } = require('../../controllers')
-const {QueryToObject, ErrorHandler} = require('./../../middleware/validate.middleware');
+const {ValidationHandler, ResponseHandler} = require("../../middleware/helpers.middleware");
+const {UserValidationSchema} = require("../../validators/user.validator");
 
 
 // --------------------------------User Routes Authorized for Users --------------------------------
-router.get('/', QueryToObject, UserController.getUsers, ErrorHandler)
+router.get('/',ResponseHandler(UserController.getUsers))
 
-router.get('/count', QueryToObject, UserController.getUsersCount, ErrorHandler)
+router.get('/count', ResponseHandler(UserController.getUsersCount))
 
-router.post('/', UserController.addUser, ErrorHandler)
+router.post('/',ValidationHandler(UserValidationSchema.postValidation),ResponseHandler(UserController.addUser))
 
-router.delete("/", UserController.deleteAllUsers, ErrorHandler)
+router.delete("/",ResponseHandler(UserController.deleteAllUsers))
 
-router.put("/:id",UserController.updateUser, AuthenticationController.sendEmailLink, ErrorHandler)
+router.put("/:id",ValidationHandler(UserValidationSchema.putValidation),ResponseHandler(UserController.updateUser))
 
-router.delete("/:id", UserController.deleteUser, ErrorHandler)
+router.put("/:id/update_email",ValidationHandler(UserValidationSchema.putValidation),ResponseHandler(UserController.updateEmail), AuthenticationController.sendEmailLink)
 
-router.get('/:id' , UserController.getUsers, ErrorHandler)
+router.delete("/:id",ResponseHandler(UserController.deleteUser))
+
+router.get('/:id',ResponseHandler(UserController.getUsers))
 
 module.exports = router

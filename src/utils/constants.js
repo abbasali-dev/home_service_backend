@@ -1,7 +1,12 @@
 exports.ROLES = {
-    COSTUMER: 'user',
+    COSTUMER: 'costumer',
     SELLER: 'seller',
     ADMIN: 'admin'
+}
+
+exports.GENDER = {
+    MALE: 'male',
+    FEMALE: 'female'
 }
 
 exports.SCHEMA = {
@@ -111,4 +116,43 @@ exports.ENCODING = {
 
 exports.EMAIL_VERIFICATION_URL = {
     MIDDLE_PATH: 'authorize/verify_email?token='
+}
+
+exports.DEFAULT_ADMIN = {
+    name: 'Abbas Ali Admin',
+    email: 'abbasali.zulfiqar@example.com',
+    age:20,
+    gender: 'male',
+    role: 'admin',
+    password: process.env.ADMIN_PASSWORD,
+    is_email_verified:true,
+    is_email_changed_after_verification:false,
+}
+
+const CUSTOMER_ROUTES = {
+    'users':['GET', 'POST', 'PUT'],
+    'users/count':['GET'],
+    'jobs':['GET','PUT','POST','DELETE'],
+    'jobs/count':['GET'],
+    'services':['GET'],
+    'services/count':['GET'],
+    'services/jobs':['GET'],
+    'categories':['GET']
+}
+
+const SELLER_ROUTES = {
+    ...CUSTOMER_ROUTES,
+    'services':['GET', 'POST', 'PUT','DELETE']
+}
+
+const ADMIN_ROUTES = {
+    ...SELLER_ROUTES,
+    'users':['GET', 'POST', 'PUT', 'DELETE'],
+    'categories':['GET', 'POST', 'PUT', 'DELETE']
+}
+
+exports.ROLE_BASED_ROUTES ={
+    costumer:CUSTOMER_ROUTES,
+    seller:SELLER_ROUTES,
+    admin:ADMIN_ROUTES,
 }

@@ -1,83 +1,35 @@
-const {RESPONSE_SUCCESS} = require("../../utils/constants")
 const {CategoryService} = require("../../services/category.service")
+const {RESPONSE_SUCCESS} = require("../../utils/constants");
 
 
-exports.getCategories = async (req, res, next) => {
-    try {
-        const categories = req.params.id ? await CategoryService.getCategoryById(req.params.id) : await CategoryService.getCategories(res.locals.queryData)
-        return res.status(RESPONSE_SUCCESS.SUCCESS.code).json({
-            success: true,
-            data: categories
-        })
-    } catch (err) {
-        res.locals.errObj = err
-        next()
-    }
+exports.getCategories = async (req, res) => {
+    return req.params.id ? await CategoryService.getCategoryById(req.params.id) : await CategoryService.getCategories(res.locals.queryData)
 }
 
-exports.updateCategory = async (req, res, next) => {
-    try {
-        const category = await CategoryService.updateCategory(req.params.id, req.params.body)
-        return res.status(RESPONSE_SUCCESS.SUCCESS.code).json({
-            success: true,
-            data: category
-        })
-    } catch (err) {
-        res.locals.errObj = err
-        next()
-    }
+exports.updateCategory = (req) => {
+    return CategoryService.updateCategory(req.params.id, req.params.body);
 }
 
-exports.addCategory = async (req, res, next) => {
-    try {
-        const category = await CategoryService.addCategory(req.body)
-        return res.status(RESPONSE_SUCCESS.SUCCESS.code).json({
-            success: true,
-            data: category
-        })
-    } catch (err) {
-        res.locals.errObj = err
-        next()
-    }
+exports.addCategory = (req) => {
+    return CategoryService.addCategory(req.body)
 }
 
-exports.deleteCategory = async (req, res, next) => {
-    try {
-        const category = await CategoryService.deleteCategory(req.params.id)
-        return res.status(RESPONSE_SUCCESS.SUCCESS.code).json({
-            success: true,
-            data: category
-        })
-    } catch (err) {
-        res.locals.errObj = err
-        next()
-    }
+exports.deleteCategory = (req) => {
+    return CategoryService.deleteCategory(req.params.id)
 }
 
-exports.deleteAllCategories = async (req, res, next) => {
-    try {
-        const category = await CategoryService.deleteAllCategories()
-        return res.status(RESPONSE_SUCCESS.SUCCESS.code).json({
-            success: true,
-            data: category
-        })
-    } catch (err) {
-        res.locals.errObj = err
-        next()
+exports.deleteAllCategories = async () => {
+    await CategoryService.deleteAllCategories()
+    return {
+        response: RESPONSE_SUCCESS.SUCCESS.code
     }
 }
 
 
+exports.getCategoriesCount = (req, res) => {
+    return CategoryService.getCategoriesCount(res.locals.queryData)
+}
 
-exports.getCategoriesCount = async (req, res, next) => {
-    try {
-        const count = await CategoryService.getCategoriesCount(res.locals.queryData)
-        return res.status(RESPONSE_SUCCESS.SUCCESS.code).json({
-            success: true,
-            data: count
-        })
-    } catch (err) {
-        res.locals.errObj = err
-        next()
-    }
+exports.getCategoryCount = (req, res) => {
+    return CategoryService.getCategoryCount(res.locals.queryData)
 }

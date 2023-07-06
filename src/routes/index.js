@@ -9,7 +9,7 @@ const categoryRoutes = require('./CategoryRoutes/category.routes')
 const authenticationRoutes = require('./AuthRoutes/authentication.routes')
 const authorizationRoutes = require('./AuthRoutes/authorization.routes')
 const {AUTH_STRETEGY} = require("../utils/constants")
-const {Authorize} = require("../middleware/authorize.middleware")
+const {Authorize} = require("../middleware/helpers.middleware")
 
 
 router.use('/', authenticationRoutes)

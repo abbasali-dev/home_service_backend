@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const bcrypt = require("bcrypt")
 
-const {JSON_WEB_TOKEN, EMAIL_VERIFICATION_URL} = require("./constants")
+const {JSON_WEB_TOKEN, EMAIL_VERIFICATION_URL, RESPONSE_FAILURE} = require("./constants")
 
 module.exports.generateToken = (user) => {
     const payload = {
@@ -30,12 +30,12 @@ module.exports.generateVerificationLink = (token) => {
     return process.env.SERVE_URL + EMAIL_VERIFICATION_URL.MIDDLE_PATH + token
 }
 
-module.exports.findMostMatchingRoute = (url, routsArray) => {
+module.exports.findMostMatchingRoute = (url, routes) => {
     let maxMatches = 0;
     let mostMatchingRoute = [];
 
-    for (const route of routsArray) {
-        const matches = calculateMatchingScore(url, route.path);
+    for (const route of Object.keys(routes)) {
+        const matches = calculateMatchingScore(url, route);
         if (matches > maxMatches) {
             maxMatches = matches;
             mostMatchingRoute = [route];
@@ -44,7 +44,7 @@ module.exports.findMostMatchingRoute = (url, routsArray) => {
         }
     }
 
-    return mostMatchingRoute[0];
+    return routes[mostMatchingRoute[0]];
 }
 
 function calculateMatchingScore(inputText, text) {
@@ -59,4 +59,19 @@ function calculateMatchingScore(inputText, text) {
     }
 
     return matches;
+}
+
+
+module.exports.isUnique = async (schema, value) => {
+    const data = await schema.findOne(value);
+    return !data;
+};
+
+module.exports.checkCustomError = (err) => {
+    for (const [_, val] of Object.entries(RESPONSE_FAILURE)) {
+        if (err.code === val.code) {
+            return true;
+        }
+    }
+    return false;
 }
